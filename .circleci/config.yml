@@ -1,5 +1,4 @@
-version: 2.1
-
+version: 2
 jobs:
   build:
     docker:
@@ -23,17 +22,11 @@ jobs:
 
 workflows:
   version: 2
-  commit-workflows:
+  my_workflow:
     jobs:
      - build
-  schedule-workflow:
-    triggers:
-      - schedule:
-          cron: "0 * * * *"
-          filters:
-            branches:
-              only:
-              - master
-    jobs:
-      - build
-      - deploy
+     - deploy:
+        requires:
+          - build
+
+
