@@ -1,18 +1,39 @@
 version: 2.1
 
-workflows:
-  test-deploy:
-    jobs:
-     - test
 jobs:
-  test:
+  build:
     docker:
-       - image: cimg/node:14.13.0
+       - image: circleci/node
+    working_directory: ~/circleci-demo-schdeule   
     steps:
       - checkout
       - run:  
-            name: Install dependencies
-            command: npm install
-      - run:
-            name: Run tests
-            command: npm run test       
+            name: Run build Command
+            command: echo "build command Running"
+
+  deploy:
+    docker:
+       - image: circleci/node
+    working_directory: ~/circleci-demo-schdeule   
+    steps:
+      - checkout
+      - run:  
+            name: Run build Command
+            command: echo "deploy command Running"        
+
+workflows:
+  version: 2
+  commit-workflows:
+    jobs:
+     - build
+  schedule-workflow:
+    triggers:
+      - schedule:
+          cron: "0 * * * *"
+          filters:
+            branches:
+              only:
+              - master
+    jobs:
+      - build
+      - deploy
