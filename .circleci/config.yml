@@ -2,31 +2,9 @@ version: 2
 jobs:
   build:
     docker:
-       - image: circleci/node
-    working_directory: ~/circleci-demo-schdeule   
+       - image: circleci/node:9.8.0-stretch-browsers     
     steps:
       - checkout
-      - run:  
-            name: Run build Command
-            command: echo "build command Running"
-
-  deploy:
-    docker:
-       - image: circleci/node
-    working_directory: ~/circleci-demo-schdeule   
-    steps:
-      - checkout
-      - run:  
-            name: Run build Command
-            command: echo "deploy command Running"        
-
-workflows:
-  version: 2
-  my_workflow:
-    jobs:
-     - build
-     - deploy:
-        requires:
-          - build
-
-
+      - setup_remote_docker:
+          docker_layer_caching: true
+      - run: docker build .
